@@ -1,0 +1,20 @@
+meta {
+  name: Admin
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/admin
+  body: json
+  auth: basic
+}
+
+auth:basic {
+  username: admin
+  password: admin
+}
+
+vars:post-response {
+  token: res.body.token
+}
