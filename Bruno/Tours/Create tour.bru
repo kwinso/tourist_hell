@@ -1,0 +1,17 @@
+meta {
+  name: Create tour
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/tours
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  name: GreatTours
+  description: Bob DylanBob Dylan
+  banner: @file(/Users/kwinso/Downloads/Ekaterinburg 2025 M/День 1/20250126_162229.jpg)
+}

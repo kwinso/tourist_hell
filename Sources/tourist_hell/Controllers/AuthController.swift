@@ -15,8 +15,7 @@ struct ClientTokenResponse: Content {
 struct AuthController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
         let auth = routes.grouped("auth")
-        
-        
+
          auth.grouped(Admin.authenticator()).post("admin", use: self.admin)
     }
     
@@ -24,7 +23,7 @@ struct AuthController: RouteCollection {
     @Sendable
     func admin(req: Request) async throws -> ClientTokenResponse {
         let admin = try req.auth.require(Admin.self)
-        let payload = try SessionToken(with: admin)
+        let payload = try AdminToken(with: admin)
         return ClientTokenResponse(token: try await req.jwt.sign(payload))
     }
 }

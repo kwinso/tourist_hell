@@ -8,9 +8,8 @@ import JWT
 // configures your application
 public func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
  
-    
     
     guard let secret = Environment.get("APP_SECRET") else {
         fatalError("APP_SECRET environment variable must be set.")
@@ -28,6 +27,7 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(Admin.CreateAdmin())
     app.migrations.add(Admin.SeedAdmins())
+    app.migrations.add(Tour.CreateTour())
 
     // register routes
     try routes(app)

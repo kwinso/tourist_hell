@@ -10,7 +10,7 @@ import Fluent
 import JWT
 
 
-struct SessionToken: Content, Authenticatable, JWTPayload {
+struct AdminToken: Content, Authenticatable, JWTPayload {
     enum CodingKeys: String, CodingKey {
         case expiration = "exp"
         case isAdmin = "admin"
