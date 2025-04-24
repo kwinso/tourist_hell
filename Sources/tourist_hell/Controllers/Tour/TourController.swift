@@ -133,9 +133,7 @@ struct TourController: RouteCollection {
     @Sendable
     func delete(req: Request) async throws -> Bool {
         let id = req.parameters.get("id", as: UUID.self)!
-        if let tour = try await Tour.find(id, on: req.db) {
-            try await tour.delete(on: req.db)
-        }
+        try await Tour.query(on: req.db).filter(\.$id == id).delete()
         
         return true
     }

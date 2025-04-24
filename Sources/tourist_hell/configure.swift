@@ -29,8 +29,12 @@ public func configure(_ app: Application) async throws {
 
     
     app.migrations.add(Admin.CreateAdmin())
-    app.migrations.add(Admin.SeedAdmins())
     app.migrations.add(Tour.CreateTour())
+    
+    #if DEBUG
+    app.migrations.add(Admin.SeedAdmins())
+    app.migrations.add(Tour.SeedTours())
+    #endif
 
     // register routes
     try routes(app)
