@@ -24,6 +24,8 @@ final class Client: Model, @unchecked Sendable {
     @Field(key: "age")
     var age: Int
     
+    @Children(for: \.$client)
+    var bookings: [Booking]
     
     init() {}
     

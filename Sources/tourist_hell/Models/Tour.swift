@@ -31,6 +31,9 @@ final class Tour: Model, @unchecked Sendable {
     @Field(key: "banner_photo")
     var bannerPhoto: String
     
+    @Children(for: \.$tour)
+    var bookings: [Booking]
+    
     init() {}
     
     init(id: UUID? = nil, name: String, description: String, bannerPhoto: String, destinationCountry: String, closestTourDate: Date) {
