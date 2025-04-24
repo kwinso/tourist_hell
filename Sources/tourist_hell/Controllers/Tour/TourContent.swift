@@ -7,10 +7,11 @@
 
 import Vapor
 
-struct CreateTour: Content {
+struct CreateTour: Content, @unchecked Sendable {
     var name: String
     var description: String
-    var closestTourDate: Date
+    
+    @DateValue<ISO8601Strategy> var closestTourDate: Date
     var destinationCountry: String
     var banner: File
 }
@@ -38,10 +39,12 @@ extension CreateTour: Validatable {
     }
 }
 
-struct PatchTour: Content {
+struct PatchTour: Content, @unchecked Sendable {
     var name: String?
     var description: String?
-    var closestTourDate: Date?
+    
+    @OptionalDateValue<ISO8601Strategy> var closestTourDate: Date?
+    
     var destinationCountry: String?
     var banner: File?
 }

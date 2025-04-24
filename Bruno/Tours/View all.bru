@@ -5,7 +5,12 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/tours
+  url: {{baseUrl}}/tours?sortBy=country&sortOrder=desc
   body: none
   auth: inherit
+}
+
+params:query {
+  sortBy: country
+  sortOrder: desc
 }
