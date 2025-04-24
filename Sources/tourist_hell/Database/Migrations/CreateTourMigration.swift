@@ -18,6 +18,8 @@ extension Tour {
                 .id()
                 .field("name", .string)
                 .field("description", .string)
+                .field("closest_tour_date", .date)
+                .field("destination_country", .string)
                 .field("banner_photo", .string)
                 .unique(on: "name")
                 .create()

@@ -16,6 +16,8 @@ public func configure(_ app: Application) async throws {
     }
     let hmacKey = HMACKey(from: secret)
     await app.jwt.keys.add(hmac: hmacKey, digestAlgorithm: .sha256)
+    
+    
     app.databases.use(DatabaseConfigurationFactory.postgres(configuration: .init(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
@@ -25,6 +27,7 @@ public func configure(_ app: Application) async throws {
         tls: .prefer(try .init(configuration: .clientDefault)))
     ), as: .psql)
 
+    
     app.migrations.add(Admin.CreateAdmin())
     app.migrations.add(Admin.SeedAdmins())
     app.migrations.add(Tour.CreateTour())

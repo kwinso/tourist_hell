@@ -7,7 +7,7 @@
 
 import Vapor
 import Foundation
-
+import Fluent
 
 
 struct TourController: RouteCollection {
@@ -21,6 +21,10 @@ struct TourController: RouteCollection {
             .grouped(AdminToken.guardMiddleware())
         
         adminRoutes.on(.POST, body: .collect(maxSize: "5mb"), use: create)
+        adminRoutes.on(.PATCH, ":id", body: .collect(maxSize: "5mb"), use: patch)
+        adminRoutes.delete(":id", use: delete)
+        
+                       
         // todo:
         //  - PATCH for updates
         //  - GET for viewing (public), both one and multipe
@@ -30,8 +34,40 @@ struct TourController: RouteCollection {
     
     @Sendable
     func index(req: Request) async throws -> [TourDTO] {
-        let tours = try await Tour.query(on: req.db).all()
-        return tours.map { tour in
+        // TODO: Make so that only those tours that are have future date appear
+        let query = try req.query.decode(IndexTourQuery.self)
+        let tourQuery = Tour.query(on: req.db)
+        // TODO: Make additional query param for skipping old
+//            .filter(\Tour.$closestTourDate > Date.now)
+
+        if let country = query.country {
+            tourQuery.filter(\.$destinationCountry == country)
+        }
+        
+        // Probably could've been better but idc
+        if let sortBy = query.sortBy {
+            let order = query.sortOrder ?? .asc
+            let direction = order == .asc ? DatabaseQuery.Sort.Direction.ascending : .descending
+            switch sortBy {
+            case .country:
+                tourQuery.sort(\.$destinationCountry, direction)
+            case .date:
+                tourQuery.sort(\.$closestTourDate, direction)
+            case .name:
+                tourQuery.sort(\.$name, direction)
+            }
+        }
+        
+        if let search = query.search {
+            tourQuery.group(.or) { group in
+                group
+                    .filter(\.$name ~~ search)
+                    .filter(\.$destinationCountry ~~ search)
+                    .filter(\.$description ~~ search)
+            }
+        }
+                                           
+        return try await tourQuery.all().map { tour in
             tour.toDTO()
         }
     }
@@ -48,7 +84,13 @@ struct TourController: RouteCollection {
         
         try await req.fileio.writeFile(data.banner.data, at: absoluteUploadPath)
         
-        let tour = Tour(name: data.name, description: data.description, bannerPhoto: uploadPath)
+        let tour = Tour(
+            name: data.name,
+            description: data.description,
+            bannerPhoto: uploadPath,
+            destinationCountry: data.destinationCountry,
+            closestTourDate: Calendar.current.startOfDay(for: data.closestTourDate)
+        )
         do {
             try await tour.save(on: req.db)
         } catch {
@@ -57,13 +99,44 @@ struct TourController: RouteCollection {
             
         return tour.toDTO()
     }
-}
-
-extension TourController {
-    fileprivate func saveTourBannerFile(name: String, data: Data) -> Bool {
-        let path = FileManager.default
-            .currentDirectoryPath.appending("/\(name)")
-        return FileManager.default.createFile(atPath: path, contents: data, attributes: nil)
+    
+    @Sendable
+    func patch(req: Request) async throws -> TourDTO {
+        try PatchTour.validate(content: req)
+        let id = req.parameters.get("id", as: UUID.self)!
+        let data = try req.content.decode(PatchTour.self)
         
+        guard let tour = try await Tour.find(id, on: req.db) else {
+            throw Abort(.notFound)
+        }
+        
+        if let name = data.name {
+            tour.name = name
+        }
+        if let description = data.description {
+            tour.description = description
+        }
+        if let banner = data.banner {
+            // TODO: Remove old file and upload new one
+        }
+        if let closestTourDate = data.closestTourDate {
+            tour.closestTourDate = closestTourDate
+        }
+        if let country = data.destinationCountry {
+            tour.destinationCountry = country
+        }
+        
+        try await tour.save(on: req.db)
+        return tour.toDTO()
+    }
+    
+    @Sendable
+    func delete(req: Request) async throws -> Bool {
+        let id = req.parameters.get("id", as: UUID.self)!
+        if let tour = try await Tour.find(id, on: req.db) {
+            try await tour.delete(on: req.db)
+        }
+        
+        return true
     }
 }
