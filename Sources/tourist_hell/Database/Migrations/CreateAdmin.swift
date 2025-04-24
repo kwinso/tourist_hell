@@ -1,5 +1,5 @@
 //
-//  CreateAdmins.swift
+//  CreateAdmin.swift
 //  tourist_hell
 //
 //  Created by Ruslan on 22.04.2025.

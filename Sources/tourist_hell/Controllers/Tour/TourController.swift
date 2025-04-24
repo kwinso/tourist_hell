@@ -103,7 +103,9 @@ struct TourController: RouteCollection {
     @Sendable
     func patch(req: Request) async throws -> TourDTO {
         try PatchTour.validate(content: req)
-        let id = req.parameters.get("id", as: UUID.self)!
+        guard let id = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
         let data = try req.content.decode(PatchTour.self)
         
         guard let tour = try await Tour.find(id, on: req.db) else {
@@ -132,7 +134,9 @@ struct TourController: RouteCollection {
     
     @Sendable
     func delete(req: Request) async throws -> Bool {
-        let id = req.parameters.get("id", as: UUID.self)!
+        guard let id = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
         try await Tour.query(on: req.db).filter(\.$id == id).delete()
         
         return true

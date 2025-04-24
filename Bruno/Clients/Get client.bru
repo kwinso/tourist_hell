@@ -1,0 +1,15 @@
+meta {
+  name: Get client
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/clients/{{id}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  id: 4F8F509F-5FCA-4E5F-8C25-E32F5D6B8052
+}
