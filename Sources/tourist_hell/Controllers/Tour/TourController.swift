@@ -11,9 +11,16 @@ import Vapor
 
 struct TourController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
-        let tour = routes.grouped("tours")
+        let tour =
+            routes
+            .grouped("tours")
 
         tour.get(use: index)
+
+        tour.group(":id", "ratings") { ratingsRoute in
+            ratingsRoute.get(use: ratings)
+            ratingsRoute.post(use: createRating)
+        }
 
         let adminRoutes =
             tour
@@ -36,8 +43,6 @@ struct TourController: RouteCollection {
         // TODO: Make so that only those tours that are have future date appear
         let query = try req.query.decode(IndexTourQuery.self)
         let tourQuery = Tour.query(on: req.db)
-        // TODO: Make additional query param for skipping old
-        //            .filter(\Tour.$closestTourDate > Date.now)
 
         if let country = query.country {
             tourQuery.filter(\.$destinationCountry == country)
@@ -69,7 +74,6 @@ struct TourController: RouteCollection {
             tour.toDTO()
         }
     }
-
     @Sendable
     func create(req: Request) async throws -> TourDTO {
         try CreateTour.validate(content: req)
@@ -137,5 +141,35 @@ struct TourController: RouteCollection {
         try await Tour.query(on: req.db).filter(\.$id == id).delete()
 
         return true
+    }
+
+    @Sendable
+    func ratings(req: Request) async throws -> [RatingDTO] {
+        guard let tourId = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
+        let ratings = try await Rating.query(on: req.db).filter(\.$tour.$id == tourId).all()
+        return ratings.map { rating in
+            rating.toDTO()
+        }
+    }
+
+    @Sendable
+    func createRating(req: Request) async throws -> RatingDTO {
+        try CreateRating.validate(content: req)
+        let data = try req.content.decode(CreateRating.self)
+
+        guard let tourId = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
+
+        let rating = Rating(
+            tourId: tourId,
+            name: data.name,
+            rating: data.rating
+        )
+        try await rating.save(on: req.db)
+
+        return rating.toDTO()
     }
 }

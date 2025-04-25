@@ -48,3 +48,7 @@ struct BookingQuery: Content {
     var status: BookingStatus?
     var dateSort: SortOrder?
 }
+
+struct SetStatus: Content {
+    var status: BookingStatus
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Set status
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/bookings/{{id}}/status
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "status": "paid"
+  }
+}
+
+vars:pre-request {
+  id: E9BA1FAB-C521-47DB-8AEE-0163EEBBD280
+}

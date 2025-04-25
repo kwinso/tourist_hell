@@ -1,0 +1,22 @@
+meta {
+  name: Create rating
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/tours/{{id}}/ratings
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "bob dylan",
+    "rating": 1
+  }
+}
+
+vars:pre-request {
+  id: f205b63f-dadd-492f-80f8-7ffef158ea65
+}

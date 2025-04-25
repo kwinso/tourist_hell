@@ -17,6 +17,7 @@ struct BookingController: RouteCollection {
 
         let adminRoutes = bookings.grouped(AdminToken.authenticator())
         adminRoutes.get(use: index)
+        adminRoutes.patch(":id", "status", use: setStatus)
     }
 
     @Sendable
@@ -81,6 +82,22 @@ struct BookingController: RouteCollection {
         guard let booking = try await Booking.find(id, on: req.db) else {
             throw Abort(.notFound)
         }
+
+        return booking.toStatusDTO()
+    }
+
+    @Sendable
+    func setStatus(req: Request) async throws -> BookingStatusDTO {
+        let data = try req.content.decode(SetStatus.self)
+        guard let id = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
+        guard let booking = try await Booking.find(id, on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        booking.status = data.status
+        try await booking.save(on: req.db)
 
         return booking.toStatusDTO()
     }

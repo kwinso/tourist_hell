@@ -16,6 +16,11 @@ struct CreateTour: Content, @unchecked Sendable {
     var banner: File
 }
 
+struct CreateRating: Content, @unchecked Sendable {
+    var name: String
+    var rating: UInt8
+}
+
 func tourValidations(_ validator: inout Validations, forPatch: Bool = false) {
     let fiveMegabytes = 5 * 8 * 1024 * 1024
     // TODO: Add unique check
@@ -36,6 +41,13 @@ func tourValidations(_ validator: inout Validations, forPatch: Bool = false) {
 extension CreateTour: Validatable {
     public static func validations(_ validator: inout Validations) {
         tourValidations(&validator)
+    }
+}
+
+extension CreateRating: Validatable {
+    public static func validations(_ validator: inout Validations) {
+        validator.add("name", as: String.self, is: .count(5...25) && .ascii, required: true)
+        validator.add("rating", as: Int.self, is: .range(1...5), required: true)
     }
 }
 
