@@ -34,13 +34,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(Booking.CreateBooking())
     app.migrations.add(Rating.CreateRating())
 
-    #if DEBUG
-        app.migrations.add(Admin.SeedAdmins())
-        app.migrations.add(Tour.SeedTours())
-        app.migrations.add(Client.SeedClients())
-        app.migrations.add(Booking.SeedBookings())
-        app.migrations.add(Rating.SeedRatings())
-    #endif
+    app.asyncCommands.use(SeedCommand(), as: "seed")
 
     // register routes
     try routes(app)
