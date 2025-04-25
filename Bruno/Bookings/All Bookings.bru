@@ -1,0 +1,17 @@
+meta {
+  name: All Bookings
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/bookings?tour=<id>
+  body: none
+  auth: inherit
+}
+
+params:query {
+  tour: <id>
+  ~status: paid
+  ~client: <id>
+}

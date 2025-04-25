@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:tourist_hell}",
+            "name": "Debug tourist_hell",
+            "program": "${workspaceFolder:tourist_hell}/.build/debug/tourist_hell",
+            "preLaunchTask": "swift: Build Debug tourist_hell"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:tourist_hell}",
+            "name": "Release tourist_hell",
+            "program": "${workspaceFolder:tourist_hell}/.build/release/tourist_hell",
+            "preLaunchTask": "swift: Build Release tourist_hell"
+        }
+    ]
+}

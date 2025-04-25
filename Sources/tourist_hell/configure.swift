@@ -31,11 +31,13 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(Admin.CreateAdmin())
     app.migrations.add(Tour.CreateTour())
     app.migrations.add(Client.CreateClient())
+    app.migrations.add(Booking.CreateBooking())
     
     #if DEBUG
     app.migrations.add(Admin.SeedAdmins())
     app.migrations.add(Tour.SeedTours())
     app.migrations.add(Client.SeedClients())
+    app.migrations.add(Booking.SeedBookings())
     #endif
 
     // register routes
