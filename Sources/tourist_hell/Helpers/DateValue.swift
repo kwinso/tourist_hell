@@ -13,7 +13,7 @@ import Foundation
 ///  custom strategies for encoding and decoding date values.
 public protocol DateValueCodableStrategy {
     associatedtype RawValue
-    
+
     static func decode(_ value: RawValue) throws -> Date
     static func encode(_ date: Date) -> RawValue
 }
@@ -24,7 +24,7 @@ public protocol DateValueCodableStrategy {
 @propertyWrapper
 public struct DateValue<Formatter: DateValueCodableStrategy> {
     public var wrappedValue: Date
-    
+
     public init(wrappedValue: Date) {
         self.wrappedValue = wrappedValue
     }
@@ -62,7 +62,7 @@ extension DateValue: Hashable {
 @propertyWrapper
 public struct OptionalDateValue<Formatter: DateValueCodableStrategy> {
     public var wrappedValue: Date?
-    
+
     public init(wrappedValue: Date?) {
         self.wrappedValue = wrappedValue
     }
@@ -72,7 +72,7 @@ extension OptionalDateValue: Decodable where Formatter.RawValue: Decodable {
     public init(from decoder: any Decoder) throws {
         let value = try Formatter.RawValue(from: decoder)
         self.wrappedValue = try Formatter.decode(value)
-        
+
     }
 }
 
@@ -86,7 +86,9 @@ extension OptionalDateValue: Encodable where Formatter.RawValue: Encodable {
 }
 
 extension OptionalDateValue: Equatable {
-    public static func == (lhs: OptionalDateValue<Formatter>, rhs: OptionalDateValue<Formatter>) -> Bool {
+    public static func == (lhs: OptionalDateValue<Formatter>, rhs: OptionalDateValue<Formatter>)
+        -> Bool
+    {
         return lhs.wrappedValue == rhs.wrappedValue
     }
 }
@@ -108,11 +110,12 @@ extension OptionalDateValue: Hashable {
 public struct ISO8601Strategy: DateValueCodableStrategy {
     public static func decode(_ value: String) throws -> Date {
         guard let date = ISO8601DateFormatter().date(from: value) else {
-            throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Invalid Date Format!"))
+            throw DecodingError.dataCorrupted(
+                .init(codingPath: [], debugDescription: "Expected ISO8601 date string."))
         }
         return date
     }
-    
+
     public static func encode(_ date: Date) -> String {
         return ISO8601DateFormatter().string(from: date)
     }

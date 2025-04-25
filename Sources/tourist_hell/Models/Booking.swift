@@ -34,8 +34,19 @@ final class Booking: Model, @unchecked Sendable {
 
     init() {}
 
+    init(id: UUID? = nil, tourId: UUID, clientId: UUID, tourDate: Date, status: BookingStatus) {
+        self.id = id
+        self.$tour.id = tourId
+        self.$client.id = clientId
+        self.tourDate = tourDate
+        self.status = status
+    }
+
     func toDTO() -> BookingDTO {
         return BookingDTO(with: self)
+    }
+    func toStatusDTO() -> BookingStatusDTO {
+        return BookingStatusDTO(with: self)
     }
 }
 
@@ -52,5 +63,15 @@ struct BookingDTO: Content {
         self.tourDate = booking.tourDate
         self.status = booking.status
         self.tour = TourDTO(with: booking.tour)
+    }
+}
+
+struct BookingStatusDTO: Content {
+    var id: UUID?
+    var status: BookingStatus
+
+    init(with booking: Booking) {
+        self.id = booking.id
+        self.status = booking.status
     }
 }

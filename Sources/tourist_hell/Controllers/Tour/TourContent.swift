@@ -10,7 +10,7 @@ import Vapor
 struct CreateTour: Content, @unchecked Sendable {
     var name: String
     var description: String
-    
+
     @DateValue<ISO8601Strategy> var closestTourDate: Date
     var destinationCountry: String
     var banner: File
@@ -35,16 +35,16 @@ func tourValidations(_ validator: inout Validations, forPatch: Bool = false) {
 
 extension CreateTour: Validatable {
     public static func validations(_ validator: inout Validations) {
-       tourValidations(&validator)
+        tourValidations(&validator)
     }
 }
 
 struct PatchTour: Content, @unchecked Sendable {
     var name: String?
     var description: String?
-    
+
     @OptionalDateValue<ISO8601Strategy> var closestTourDate: Date?
-    
+
     var destinationCountry: String?
     var banner: File?
 }
@@ -57,9 +57,6 @@ extension PatchTour: Validatable {
 
 enum TourSortBy: String, Codable {
     case country, date, name
-}
-enum SortOrder: String, Codable {
-    case asc, desc
 }
 
 struct IndexTourQuery: Content {

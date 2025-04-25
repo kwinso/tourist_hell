@@ -5,13 +5,14 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/bookings?tour=<id>
+  url: {{baseUrl}}/bookings?dateSort=asc
   body: none
   auth: inherit
 }
 
 params:query {
-  tour: <id>
-  ~status: paid
+  dateSort: asc
   ~client: <id>
+  ~status: paid
+  ~tour: <id>
 }
