@@ -11,9 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Calendar } from "./ui/calendar";
 import { format } from "date-fns";
 import { Textarea } from "./ui/textarea";
@@ -42,6 +39,7 @@ export function TourDialog({
         <DialogHeader>
           <DialogTitle>{tour ? "Edit Tour" : "Add Tour"}</DialogTitle>
         </DialogHeader>
+
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">

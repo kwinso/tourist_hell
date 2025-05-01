@@ -79,16 +79,10 @@ struct TourController: RouteCollection {
         try CreateTour.validate(content: req)
         let data = try req.content.decode(CreateTour.self)
 
-        let uploadFilename = uploadFilename(ext: data.banner.extension ?? "png")
-        let uploadPath = "uploads/\(uploadFilename)"
-        let absoluteUploadPath = req.application.directory.publicDirectory.appending(uploadPath)
-
-        try await req.fileio.writeFile(data.banner.data, at: absoluteUploadPath)
-
         let tour = Tour(
             name: data.name,
             description: data.description,
-            bannerPhoto: uploadPath,
+            bannerPhoto: "test/italy.jpg",
             destinationCountry: data.destinationCountry,
             closestTourDate: Calendar.current.startOfDay(for: data.closestTourDate),
         )

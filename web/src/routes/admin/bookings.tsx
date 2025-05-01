@@ -64,7 +64,7 @@ function RouteComponent() {
             </SelectContent>
           </Select>
           <Table>
-            <TableCaption>A list of clients in the system</TableCaption>
+            <TableCaption>A list of bookings in the system</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-1/5">Client</TableHead>

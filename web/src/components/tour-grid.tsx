@@ -5,13 +5,17 @@ import { TourCard } from "@/components/tour-card";
 import { TourDetails } from "@/components/tour-details";
 import { getTours, type Tour } from "@/api";
 
-export function TourGrid() {
+interface TourGridProps {
+  search: string;
+}
+
+export function TourGrid({ search }: TourGridProps) {
   const [selectedTour, setSelectedTour] = useState<string | null>(null);
   const [tours, setTours] = useState<Tour[]>([]);
 
   useEffect(() => {
-    getTours("").then(setTours);
-  }, []);
+    getTours(search).then(setTours);
+  }, [search]);
 
   const handleOpenDetails = (tourId: string) => {
     setSelectedTour(tourId);

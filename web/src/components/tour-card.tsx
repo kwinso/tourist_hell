@@ -6,7 +6,8 @@ import { Calendar, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { StarRating } from "@/components/star-rating";
-import type { Tour } from "@/api";
+import { getRatings, type Review, type Tour } from "@/api";
+import { useEffect, useState } from "react";
 
 interface TourCardProps {
   tour: Tour;
@@ -14,6 +15,12 @@ interface TourCardProps {
 }
 
 export function TourCard({ tour, onViewDetails }: TourCardProps) {
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    getRatings(tour.id).then(setReviews);
+  }, []);
+
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -35,11 +42,15 @@ export function TourCard({ tour, onViewDetails }: TourCardProps) {
           {tour.description}
         </p>
         <div className="flex items-center justify-between">
-          TODO: Rating here
-          {/* <StarRating rating={tour.rating} /> */}
-          {/* <span className="text-sm text-muted-foreground">
-            {tour.reviewCount} {tour.reviewCount === 1 ? "review" : "reviews"}
-          </span> */}
+          <StarRating
+            rating={
+              reviews.reduce((acc, review) => acc + review.rating, 0) /
+              reviews.length
+            }
+          />
+          <span className="text-sm text-muted-foreground">
+            {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+          </span>
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4 pt-0 border-t border-muted/30">

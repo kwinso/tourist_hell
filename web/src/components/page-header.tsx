@@ -3,8 +3,19 @@ import { FlameIcon, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
-export function PageHeader() {
+interface PageHeaderProps {
+  onSearchChange: (search: string) => void;
+}
+
+export function PageHeader({ onSearchChange }: PageHeaderProps) {
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    onSearchChange(search);
+  }, [search]);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex items-center justify-between h-16 px-4 mx-auto">
@@ -18,6 +29,8 @@ export function PageHeader() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search destinations..."
               className="w-full pl-8 bg-background"
             />
@@ -25,17 +38,12 @@ export function PageHeader() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" className="hidden md:flex">
-            Help
-          </Button>
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Search className="w-5 h-5" />
-            <span className="sr-only">Search</span>
-          </Button>
-          <Button variant="outline" size="sm" className="gap-2">
-            <User className="w-4 h-4" />
-            <span className="hidden sm:inline">Account</span>
-          </Button>
+          <Link to="/login">
+            <Button variant="outline" size="sm" className="gap-2">
+              <User className="w-4 h-4" />
+              <span className="hidden sm:inline">Login</span>
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

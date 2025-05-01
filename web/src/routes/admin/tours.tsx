@@ -48,6 +48,7 @@ function RouteComponent() {
               onClick={() =>
                 setEditedTour({
                   name: "New Tour",
+                  banner: "",
                   description: "",
                   destinationCountry: "",
                   closestTourDate: new Date().toISOString().slice(0, -5) + "Z",
@@ -91,7 +92,7 @@ function RouteComponent() {
             open={!!editedTour}
           />
           <Table>
-            <TableCaption>A list of clients in the system</TableCaption>
+            <TableCaption>A list of tours in the system</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
