@@ -13,7 +13,7 @@ struct CreateTour: Content, @unchecked Sendable {
 
     @DateValue<ISO8601Strategy> var closestTourDate: Date
     var destinationCountry: String
-    // var banner: File
+    var banner: File
 }
 
 struct CreateRating: Content, @unchecked Sendable {

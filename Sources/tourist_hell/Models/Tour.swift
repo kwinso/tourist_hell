@@ -28,8 +28,8 @@ final class Tour: Model, @unchecked Sendable {
     var closestTourDate: Date
 
     /// Banner photo is a relative URL path to where the banner photo is stored
-    // @Field(key: "banner_photo")
-    // var bannerPhoto: String
+    @Field(key: "banner_photo")
+    var bannerPhoto: String
 
     @Children(for: \.$tour)
     var bookings: [Booking]
@@ -37,13 +37,15 @@ final class Tour: Model, @unchecked Sendable {
     init() {}
 
     init(
-        id: UUID? = nil, name: String, description: String, destinationCountry: String,
-        closestTourDate: Date
+        id: UUID? = nil, name: String, description: String,
+        bannerPhoto: String,
+        destinationCountry: String,
+        closestTourDate: Date,
     ) {
         self.id = id
         self.name = name
         self.description = description
-        // self.bannerPhoto = bannerPhoto
+        self.bannerPhoto = bannerPhoto
         self.destinationCountry = destinationCountry
         self.closestTourDate = closestTourDate
     }
@@ -59,6 +61,7 @@ struct TourDTO: Content {
     var description: String
     var closestTourDate: Date
     var destinationCountry: String
+    var banner: String
 
     init(with tour: Tour) {
         self.id = tour.id
@@ -66,5 +69,6 @@ struct TourDTO: Content {
         self.description = tour.description
         self.closestTourDate = tour.closestTourDate
         self.destinationCountry = tour.destinationCountry
+        self.banner = tour.bannerPhoto
     }
 }

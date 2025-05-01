@@ -16,7 +16,6 @@ async function tryCatchAPIError(
     return await requestFn();
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("here");
       throw new APIError(error.response?.data.reason, error.response?.data);
     }
     throw error;
@@ -65,9 +64,17 @@ export async function getClients(): Promise<Client[]> {
 export interface Tour {
   id: string;
   name: string;
+  banner: string;
   description: string;
   destinationCountry: string;
   closestTourDate: string;
+}
+
+export interface Review {
+  id: string;
+  tourId: string;
+  name: string;
+  rating: number;
 }
 
 export async function getTours(search: string): Promise<Tour[]> {
@@ -77,8 +84,45 @@ export async function getTours(search: string): Promise<Tour[]> {
   return resp.data;
 }
 
+export async function getRatings(tourId: string): Promise<Review[]> {
+  const resp = await tryCatchAPIError(() =>
+    client.get(`/tours/${tourId}/ratings`)
+  );
+  return resp.data;
+}
+
+export async function createRating(
+  tourId: string,
+  name: string,
+  rating: number
+): Promise<Review> {
+  const resp = await tryCatchAPIError(() =>
+    client.post(`/tours/${tourId}/ratings`, { name, rating })
+  );
+  return resp.data;
+}
+
 export async function createTour(tour: Tour) {
   const resp = await tryCatchAPIError(() => client.post("tours", tour));
+  return resp.data;
+}
+
+export async function bookTour(
+  tour: Tour,
+  name: string,
+  phone: string,
+  age: number,
+  tourDate: Date
+) {
+  const resp = await tryCatchAPIError(() =>
+    client.post(`/bookings`, {
+      tour: tour.id,
+      clientName: name,
+      clientPhone: phone,
+      age,
+      tourDate: tourDate.toISOString().slice(0, -5) + "Z",
+    })
+  );
   return resp.data;
 }
 

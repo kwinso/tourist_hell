@@ -43,9 +43,11 @@ struct RatingDTO: Content {
     var id: UUID?
     var name: String
     var rating: UInt8
+    var tourId: UUID
 
     init(with rating: Rating) {
         self.id = rating.id
+        self.tourId = rating.$tour.id
         self.name = rating.name
         self.rating = rating.rating
     }
