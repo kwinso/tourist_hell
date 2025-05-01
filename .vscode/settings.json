@@ -1,0 +1,11 @@
+{
+  "files.watcherExclude": {
+    "web/**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "web/**/routeTree.gen.ts": true
+  },
+  "files.readonlyInclude": {
+    "web/**/routeTree.gen.ts": true
+  }
+}

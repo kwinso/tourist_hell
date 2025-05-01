@@ -16,7 +16,7 @@ extension Rating {
         func prepare(on database: any Database) async throws {
             try await database.schema("tour_ratings")
                 .id()
-                .field("tour_id", .uuid, .required, .references("tours", "id"))
+                .field("tour_id", .uuid, .required, .references("tours", "id", onDelete: .cascade))
                 .field("name", .string, .required)
                 .field("rating", .uint8, .required)
                 .create()

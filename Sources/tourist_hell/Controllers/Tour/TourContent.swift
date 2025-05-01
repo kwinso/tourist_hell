@@ -13,7 +13,7 @@ struct CreateTour: Content, @unchecked Sendable {
 
     @DateValue<ISO8601Strategy> var closestTourDate: Date
     var destinationCountry: String
-    var banner: File
+    // var banner: File
 }
 
 struct CreateRating: Content, @unchecked Sendable {
@@ -26,16 +26,16 @@ func tourValidations(_ validator: inout Validations, forPatch: Bool = false) {
     // TODO: Add unique check
     validator.add("name", as: String.self, is: .count(5...25) && .ascii, required: !forPatch)
     validator.add("description", as: String.self, is: .count(10...100), required: !forPatch)
-    validator.add(
-        "banner",
-        as: File.self,
-        // TODO: Validate proper mimetype (with signatures)
-        is: .custom("Validates the file") { file in
-            ["image/jpeg", "image/png"].contains(file.multipart?.contentType ?? "")
-        },
-        required: !forPatch,
-        customFailureDescription: "Banner must be a valid image file (JPEG or PNG) less than 5MB.",
-    )
+    // validator.add(
+    //     "banner",
+    //     as: File.self,
+    //     // TODO: Validate proper mimetype (with signatures)
+    //     is: .custom("Validates the file") { file in
+    //         ["image/jpeg", "image/png"].contains(file.multipart?.contentType ?? "")
+    //     },
+    //     required: !forPatch,
+    //     customFailureDescription: "Banner must be a valid image file (JPEG or PNG) less than 5MB.",
+    // )
 }
 
 extension CreateTour: Validatable {
@@ -58,7 +58,7 @@ struct PatchTour: Content, @unchecked Sendable {
     @OptionalDateValue<ISO8601Strategy> var closestTourDate: Date?
 
     var destinationCountry: String?
-    var banner: File?
+    // var banner: File?
 }
 
 extension PatchTour: Validatable {
